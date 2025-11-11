@@ -1,5 +1,7 @@
 It's a plugin that generates an asset index which we can easily find.It can be used on Android Studio or Idea.
 
+[Github: FlutterAssetsGenerator ](https://github.com/linjonh/FlutterAssetsGenerator.git)
+
 ## How to use
 
 ### 1.Configuring paths in pubspec.yaml
@@ -65,5 +67,4 @@ flutter_assets_gen:
   ignore_comments: false
   #default is false
   leadingWithPackageName: false
-
 ```

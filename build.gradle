@@ -10,6 +10,16 @@ plugins {
 
 apply plugin: 'org.jetbrains.changelog'
 
+// Load local.properties
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { localProperties.load(it) }
+    localProperties.each { prop ->
+        project.ext.set(prop.key, prop.value)
+    }
+}
+
 String properties(String key) {
     return project.findProperty(key).toString()
 }
@@ -77,4 +87,8 @@ patchPluginXml {
 
 runPluginVerifier {
     ideVersions = properties("pluginVerifierIdeVersions").split(',').toList()
+}
+
+publishPlugin {
+    token = project.findProperty("PUBLISH_TOKEN") ?: System.getenv("PUBLISH_TOKEN")
 }

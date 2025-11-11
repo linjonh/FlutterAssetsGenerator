@@ -1,6 +1,13 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
 [//]: # (# FlutterAssetsGenerator Changelog)
+## [2.6.0]
+### Fixed
+- Fixed Chinese language resource bundle loading issue.
+- 修改配置字段，兼容VSCode的插件配置 
+- 修复资源路径读取路径配置。 
+- 修复增加comments配置。 
+- 默认不加leadingPackageName
 ## [2.5.0]
 ### Fixed
 - Bug fix.
