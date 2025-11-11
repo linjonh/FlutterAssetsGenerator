@@ -11,7 +11,6 @@ import org.jetbrains.kotlin.idea.util.projectStructure.allModules
 import org.jetbrains.kotlin.konan.file.File
 import org.yaml.snakeyaml.Yaml
 import java.io.FileInputStream
-import java.util.*
 import java.util.regex.Pattern
 
 /**
@@ -61,27 +60,40 @@ object FileHelperNew {
                 val pubConfigMap = Yaml().load(fis) as? Map<String, Any>
                 if (pubConfigMap != null) {
                     val assetVFiles = mutableListOf<VirtualFile>()
-                    (pubConfigMap["flutter"] as? Map<*, *>)?.let { configureMap ->
-                        (configureMap["assets"] as? ArrayList<*>)?.let { list ->
+                    var key = "flutter"
+                    var keySub = "assets"
+                    if (pubConfigMap.keys.contains(Constants.KEY_CONFIGURATION_MAP)) {
+                        key = Constants.KEY_CONFIGURATION_MAP
+                        (pubConfigMap[key] as? Map<*, *>)?.let { keys ->
+                            if (keys.contains(Constants.KEY_ASSETS_PATH)) {
+                                keySub = Constants.KEY_ASSETS_PATH
+                            }
+                        }
+
+                    }
+//                    println("getPubSpecConfig key=$key keySub=$keySub")
+                    (pubConfigMap[key] as? Map<*, *>)?.let { configureMap ->
+                        (configureMap[keySub] as? ArrayList<*>)?.let { list ->
                             for (path in list) {
-                                moduleDir.findFileByRelativePath(path as String)?.let {
-                                    if (it.isDirectory) {
-                                        val index = path.indexOf("/")
-                                        val assetsPath = if (index == -1) {
-                                            path
-                                        } else {
-                                            path.substring(0, index)
-                                        }
-                                        val assetVFile = moduleDir.findChild(assetsPath)
-                                            ?: moduleDir.createChildDirectory(this, assetsPath)
-                                        if (!assetVFiles.contains(assetVFile)) {
-                                            assetVFiles.add(assetVFile)
-                                        }
-                                    } else {
+                                moduleDir.findFileByRelativePath(path as String)?.let {it->
+//                                    println("findFileByRelativePath path=$path find=$it")
+//                                    if (it.isDirectory) {
+////                                        val index = path.indexOf("/")
+////                                        val assetsPath = if (index == -1) {
+////                                            path
+////                                        } else {
+////                                            path.substring( index+1)
+////                                        }
+//                                        val assetVFile = moduleDir.findChild(it.toString())
+//                                            ?: moduleDir.createChildDirectory(this, it.toString())
+//                                        if (!assetVFiles.contains(assetVFile)) {
+//                                            assetVFiles.add(assetVFile)
+//                                        }
+//                                    } else {
                                         if (!assetVFiles.contains(it)) {
                                             assetVFiles.add(it)
                                         }
-                                    }
+//                                    }
                                 }
                             }
                         }
@@ -128,7 +140,7 @@ object FileHelperNew {
 
     fun isWithLeadingWithPackageName(config: ModulePubSpecConfig): Boolean {
         return readSetting(config, Constants.KEY_LEADING_WITH_PACKAGE_NAME) as Boolean?
-                ?: PluginSetting.instance.leadingWithPackageName
+            ?: PluginSetting.instance.leadingWithPackageName
     }
 
     /**
@@ -137,6 +149,13 @@ object FileHelperNew {
     fun getGeneratedClassName(config: ModulePubSpecConfig): String {
         return readSetting(config, Constants.KEY_CLASS_NAME) as String? ?: PluginSetting.instance.className
         ?: Constants.DEFAULT_CLASS_NAME
+    }
+
+    /**
+     * 读取生成的类名配置
+     */
+    fun getGeneratedComments(config: ModulePubSpecConfig): Boolean {
+        return readSetting(config, Constants.KEY_IGNORE_COMMENTS) as Boolean? ?: false
     }
 
     /**
@@ -161,7 +180,7 @@ object FileHelperNew {
     fun getPathIgnore(config: ModulePubSpecConfig): List<String> {
         return try {
             val paths =
-                readSetting(config, Constants.PATH_IGNORE) as List<String>?
+                readSetting(config, Constants.KEY_PATH_IGNORE) as List<String>?
                     ?: emptyList()
             paths
         } catch (e: Exception) {
@@ -175,14 +194,20 @@ object FileHelperNew {
      * 从yaml中读取
      */
     private fun getGeneratedFilePath(config: ModulePubSpecConfig): VirtualFile {
+
         return config.pubRoot.lib?.let { lib ->
             // 没有配置则返回默认path
-            val filePath: String = readSetting(config, Constants.KEY_OUTPUT_DIR) as String?
+            var filePath: String = readSetting(config, Constants.KEY_OUTPUT_DIR) as String?
                 ?: PluginSetting.instance.filePath ?: Constants.DEFAULT_OUTPUT_DIR
             println("getGeneratedFilePath $filePath")
-            if (!filePath.contains(File.separator)) {
+            println("lib path ${lib.path}")
+            println("filePath.contains( '${File.separator}') ${filePath.contains(File.separator)}")
+            if (!filePath.contains('/') && !filePath.contains('\\')) {
                 return@let lib.findOrCreateChildDir(lib, filePath)
             } else {
+                if (filePath.startsWith("lib/") || filePath.startsWith("lib\\")) {
+                    filePath = filePath.replace("lib/", "").replace("lib\\", "")
+                }
                 var file = lib
                 filePath.split(File.separator).forEach { dir ->
                     if (dir.isNotEmpty()) {
@@ -204,10 +229,13 @@ object FileHelperNew {
      */
     fun getGeneratedFile(config: ModulePubSpecConfig): VirtualFile {
         return getGeneratedFilePath(config).let {
-            val configName = getGeneratedFileName(config)
+            var configName = getGeneratedFileName(config)
+            if (!configName.endsWith(".dart")) {
+                configName += ".dart"
+            }
             return@let it.findOrCreateChildData(
                 it,
-                "$configName.dart"
+                configName
             )
         }
     }
@@ -230,8 +258,8 @@ data class ModulePubSpecConfig(
 ) {
     fun getLeadingWithPackageNameIfChecked(): String {
         if (FileHelperNew.isWithLeadingWithPackageName(this)) {
-            return  "packages/${map["name"]}/"
+            return "packages/${map["name"]}/"
         }
-        return  "";
+        return "";
     }
 }

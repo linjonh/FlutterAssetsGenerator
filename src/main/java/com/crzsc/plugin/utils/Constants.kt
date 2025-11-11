@@ -4,16 +4,16 @@ object Constants {
     /**
      * 配置map的key
      */
-    const val KEY_CONFIGURATION_MAP = "flutter_assets_generator"
+    const val KEY_CONFIGURATION_MAP = "flutter_assets_gen"
     /**
      * 输出目录的key
      */
-    const val KEY_OUTPUT_DIR = "output_dir"
+    const val KEY_OUTPUT_DIR = "output_path"
 
     /**
      * 输出文件的类名
      */
-    const val KEY_CLASS_NAME = "class_name"
+    const val KEY_CLASS_NAME = "classname"
 
     /**
      * 是否自动检测
@@ -30,7 +30,7 @@ object Constants {
     /**
      * 输出的文件名
      */
-    const val KEY_OUTPUT_FILENAME = "output_filename"
+    const val KEY_OUTPUT_FILENAME = "filename"
 
     /**
      * 分割文件的正则
@@ -40,7 +40,17 @@ object Constants {
     /**
      * 忽略的目录
      */
-    const val PATH_IGNORE = "path_ignore"
+    const val KEY_PATH_IGNORE = "exclude"
+
+    /**
+     * 需要自动生成资源的目录，如果没有则使用默认的Flutter assets配置目录
+     */
+    const val KEY_ASSETS_PATH = "assets_path"
+
+    /**
+     * 是否忽略注释
+     */
+    const val KEY_IGNORE_COMMENTS = "ignore_comments"
 
     /**
      * 默认目录

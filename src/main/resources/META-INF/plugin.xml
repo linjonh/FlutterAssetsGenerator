@@ -1,7 +1,8 @@
 <idea-plugin>
-    <id>com.crzsc.FlutterAssetsGenerator</id>
-    <name>FlutterAssetsGenerator</name>
-    <vendor email="cr1992@qq.com" url="https://github.com/cr1992/FlutterAssetsGenerator">Ray&amp;Zsc</vendor>
+    <id>com.jaysen.FlutterAssetsGeneratorV3</id>
+    <name>FlutterAssetsGeneratorV3</name>
+    <version>2.6.0</version>
+    <vendor email="jaysen.lin@foxmail.com" url="https://github.com/linjonh/FlutterAssetsGenerator.git">linjonh</vendor>
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -16,31 +17,47 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <applicationService serviceImplementation="com.crzsc.plugin.setting.PluginSetting"/>
-        <applicationConfigurable parentId="tools" instance="com.crzsc.plugin.setting.AppSettingsConfigurable"
-                                 id="com.crzsc.plugin.setting.AppSettingsConfigurable"
-                                 displayName="FlutterAssetsGenerator"/>
+        <applicationService serviceImplementation="com.crzsc.plugin.setting.PluginSetting" />
+        <applicationConfigurable
+            displayName="FlutterAssetsGeneratorV3"
+            id="com.crzsc.plugin.setting.AppSettingsConfigurable"
+            instance="com.crzsc.plugin.setting.AppSettingsConfigurable"
+            parentId="tools" />
         <!--        行标记-->
-        <codeInsight.lineMarkerProvider language="Dart"
-                                        implementationClass="com.crzsc.plugin.provider.AssetsLineMarkerProvider"/>
+        <codeInsight.lineMarkerProvider
+            implementationClass="com.crzsc.plugin.provider.AssetsLineMarkerProvider"
+            language="Dart" />
     </extensions>
 
     <applicationListeners>
-        <listener class="com.crzsc.plugin.listener.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
+        <listener
+            class="com.crzsc.plugin.listener.MyProjectManagerListener"
+            topic="com.intellij.openapi.project.ProjectManagerListener" />
     </applicationListeners>
 
     <actions>
         <!-- Add your actions here -->
-        <action id="action.generate" class="com.crzsc.plugin.actions.GenerateAction" text="Generate Flutter Assets"
-                description="Generate Assets class ">
-            <add-to-group group-id="BuildMenu" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="alt g"/>
+        <action
+            class="com.crzsc.plugin.actions.GenerateAction"
+            description="Generate Assets class V3" id="action.generate"
+            text="Generate Flutter Assets V3">
+            <add-to-group
+                anchor="last"
+                group-id="BuildMenu" />
+            <keyboard-shortcut
+                first-keystroke="alt g"
+                keymap="$default" />
         </action>
-        <action id="com.crzsc.plugin.actions.GenerateDirAction" class="com.crzsc.plugin.actions.GenerateDirAction"
-                text="Flutter: Configuring Paths" description="Configuring Paths in pubspec.yaml"
-                icon="AllIcons.Actions.BuildLoadChanges">
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>
+        <action
+            class="com.crzsc.plugin.actions.GenerateDirAction"
+            description="Configuring Paths in pubspec.yaml"
+            icon="AllIcons.Actions.BuildLoadChanges"
+            id="com.crzsc.plugin.actions.GenerateDirAction"
+            text="Flutter: Configuring Paths V3">
+            <add-to-group
+                anchor="after"
+                group-id="ProjectViewPopupMenu"
+                relative-to-action="WeighingNewGroup" />
         </action>
     </actions>
 </idea-plugin>

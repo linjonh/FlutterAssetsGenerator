@@ -9,7 +9,7 @@ class AppSettingsConfigurable : Configurable {
     // A default constructor with no arguments is required because this implementation
     // is registered as an applicationConfigurable EP
     override fun getDisplayName(): String {
-        return "FlutterAssetsGenerator"
+        return "FlutterAssetsGeneratorV3"
     }
 
     override fun getPreferredFocusedComponent(): JComponent {

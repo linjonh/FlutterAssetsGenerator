@@ -41,19 +41,29 @@ Image.asset(
 You can change default settings by add following contents in your `pubspec.yaml`.
 
 ```yaml
-flutter_assets_generator:
+flutter_assets_gen:
+  assets_path:
+    - assets/images/
+  exclude: # Optional. Configuring ignore paths. Default: [],e.g: ["assets/fonts", "assets/images/dark", ...]
+    - assets/images/**/2.0x/**
+    - assets/images/**/3.0x/**
+    - assets/images/**/4.0x/**
+    - assets/images/.DS_Store
   # Optional. Sets the directory of generated localization files. Provided value should be a valid path on lib dir. Default: generated
-  output_dir: generated
-  # Optional. Sets whether utomatic monitoring of file changes. Default: true
+  output_path: generated
+  # Optional. Sets whether automatic monitoring of file changes. Default: true
   auto_detection: true
   # Optional. Sets file name conversion rules. Default: true
   named_with_parent: true
   # Optional. Sets the name for the generated localization file. Default: assets
-  output_filename: assets
+  filename: assets
   # Optional. Sets the name for the generated localization class. Default: Assets
   class_name: Assets
   # Optional. Sets the filename split pattern for filename split. Default: [-_]
   filename_split_pattern: "[-_]"
-  # Optional. Configuring ignore paths. Default: [],e.g: ["assets/fonts", "assets/images/dark", ...]
-  path_ignore: []
+  # default is false, where generate comments or not
+  ignore_comments: false
+  #default is false
+  leadingWithPackageName: false
+
 ```
