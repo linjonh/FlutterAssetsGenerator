@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.jaysen.FlutterAssetsGeneratorV3</id>
     <name>FlutterAssetsGeneratorV3</name>
-    <version>2.6.0</version>
+    <version>2.6.1</version>
     <vendor email="jaysen.lin@foxmail.com" url="https://github.com/linjonh/FlutterAssetsGenerator.git">linjonh</vendor>
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
@@ -12,7 +12,7 @@
     <depends>com.intellij.modules.all</depends>
     <depends>com.intellij.modules.platform</depends>
     <depends>Dart</depends>
-    <depends>org.jetbrains.kotlin</depends>
+    <depends optional="true">org.jetbrains.kotlin</depends>
     <depends>io.flutter</depends>
 
     <extensions defaultExtensionNs="com.intellij">

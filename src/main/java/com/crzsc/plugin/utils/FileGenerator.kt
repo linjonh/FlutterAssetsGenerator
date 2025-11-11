@@ -20,6 +20,8 @@ import org.jetbrains.yaml.psi.YAMLFile
 import org.jetbrains.yaml.psi.YAMLMapping
 import org.jetbrains.yaml.psi.YAMLSequence
 import java.io.File
+import java.nio.file.FileSystems
+import java.nio.file.Paths
 
 class FileGenerator(private val project: Project) {
     private val ignoreDir = listOf("2.0x", "3.0x", "Mx", "Nx")
@@ -97,7 +99,7 @@ class FileGenerator(private val project: Project) {
             //add comments
             println("forEach map item:${it.key}=${it.value}")
 
-            return@map """  ${generateComments(config, it).trim()}static const String ${it.key} = ‘${config.getLeadingWithPackageNameIfChecked()}${it.value}’;"""
+            return@map """  ${generateComments(config, it).trim()}static const String ${it.key} = '${config.getLeadingWithPackageNameIfChecked()}${it.value}';"""
         }
         content.append(list.joinToString("\n"))
         content.append("\n}\n")
@@ -133,11 +135,14 @@ class FileGenerator(private val project: Project) {
             root.children.filter {
                 var pathIgnore = false
                 if (ignorePath.isNotEmpty()) {
-                    for (name in ignorePath) {
-                       val regex=Regex(name)
-                        val match=regex.matches(it.path)
-                        println("regex=$regex regex.matches=$match")
-                        if (match||it.path.contains(name, ignoreCase = true)) {
+                    val filePath = Paths.get(it.path)
+                    for (globPattern in ignorePath) {
+                        // Use PathMatcher with glob syntax
+                        val matcher = FileSystems.getDefault().getPathMatcher("glob:**/$globPattern")
+                        val match = matcher.matches(filePath) ||
+                                   FileSystems.getDefault().getPathMatcher("glob:$globPattern").matches(filePath)
+                        println("globPattern=$globPattern matches=$match path=${it.path}")
+                        if (match || it.path.contains(globPattern, ignoreCase = true)) {
                             pathIgnore = true
                             println("${it.path} pathIgnore : $pathIgnore")
                             break

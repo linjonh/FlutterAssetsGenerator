@@ -20,14 +20,14 @@ You can generate file by these ways:
 
 Simply use it like:
 
-```dart
+<pre><code class="language-dart">
 Image.asset(
-          Assets.imageLoading,
-          width: 24,
-          height: 24,
-          fit: BoxFit.contain,
-        )
-```
+  Assets.imageLoading,
+  width: 24,
+  height: 24,
+  fit: BoxFit.contain,
+)
+</code></pre>
 
 ### 3.Extras
 
@@ -42,7 +42,7 @@ Image.asset(
 ### Module based
 You can change default settings by add following contents in your `pubspec.yaml`.
 
-```yaml
+<pre><code class="language-yaml">
 flutter_assets_gen:
   assets_path:
     - assets/images/
@@ -67,4 +67,4 @@ flutter_assets_gen:
   ignore_comments: false
   #default is false
   leadingWithPackageName: false
-```
+</code></pre>
