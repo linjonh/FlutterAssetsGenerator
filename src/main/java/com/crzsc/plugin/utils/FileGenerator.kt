@@ -59,9 +59,7 @@ class FileGenerator(private val project: Project) {
     fun generateComments(config: ModulePubSpecConfig, entry: Map.Entry<String, String>): String {
         val isIgnore = FileHelperNew.getGeneratedComments(config)
         if (isIgnore) return ""
-        return """/// Assets for ${entry.key}
-  /// ${entry.value}
-  """
+        return "  /// Assets for ${entry.key}\n  /// ${entry.value}\n"
     }
 
     private fun generateWithConfig(config: ModulePubSpecConfig) {
@@ -98,8 +96,9 @@ class FileGenerator(private val project: Project) {
         val list = map.toSortedMap().map {
             //add comments
             println("forEach map item:${it.key}=${it.value}")
-
-            return@map """  ${generateComments(config, it).trim()}static const String ${it.key} = '${config.getLeadingWithPackageNameIfChecked()}${it.value}';"""
+            return@map """${
+                generateComments(config, it)
+            }  static const String ${it.key} = '${config.getLeadingWithPackageNameIfChecked()}${it.value}';"""
         }
         content.append(list.joinToString("\n"))
         content.append("\n}\n")
@@ -140,7 +139,7 @@ class FileGenerator(private val project: Project) {
                         // Use PathMatcher with glob syntax
                         val matcher = FileSystems.getDefault().getPathMatcher("glob:**/$globPattern")
                         val match = matcher.matches(filePath) ||
-                                   FileSystems.getDefault().getPathMatcher("glob:$globPattern").matches(filePath)
+                                FileSystems.getDefault().getPathMatcher("glob:$globPattern").matches(filePath)
                         println("globPattern=$globPattern matches=$match path=${it.path}")
                         if (match || it.path.contains(globPattern, ignoreCase = true)) {
                             pathIgnore = true
