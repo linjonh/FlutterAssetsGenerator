@@ -1,6 +1,9 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
 [//]: # (# FlutterAssetsGenerator Changelog)
+## [2.6.3]
+### Fixed
+- 修复中文翻译编码问题。
 ## [2.6.2]
 ### Fixed
 - 修复带注释配置时，没有换行的问题。
